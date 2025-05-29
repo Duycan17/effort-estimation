@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { getGeminiRecommendationsApi } from "@/lib/geminiApi";
 import { FeatureImportance } from "@/types/prediction";
+import { Badge } from "./ui/badge";
 
 interface GeminiResponse {
   team_recommendations: {
@@ -121,8 +122,15 @@ export function PredictionResult({ result }: PredictionResultProps) {
           <div className="text-center">
             <h3 className="text-2xl font-bold">Predicted Effort</h3>
             <p className="text-4xl font-bold text-primary">
-              {prediction.toFixed(2)}
+              {Math.abs(prediction).toFixed(2)}
             </p>
+            <div className="mt-2 flex justify-center">
+              <Badge
+                variant="outline"
+                className={`text-sm px-3 py-1 ${category.color}`}>
+                {category.name}
+              </Badge>
+            </div>
           </div>
 
           {featureImportance && (

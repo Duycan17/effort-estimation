@@ -52,7 +52,7 @@ export async function getGeminiRecommendationsApi(
       As a senior project management consultant, analyze this project's effort prediction and provide detailed, actionable recommendations.
       
       Project Metrics:
-      - Person hours: ${data.prediction}
+      - Person hours: ${Math.abs(data.prediction)}
       - Feature Importance Breakdown:
       ${data.feature_importance
         .map((f) => `  * ${f.feature}: ${f.importance}`)
@@ -68,9 +68,9 @@ export async function getGeminiRecommendationsApi(
           "team_structure": "Recommended team organization and reporting structure"
         },
         "resource_planning": {
-          "budget_estimate": "Estimated budget range based on effort score",
+          "budget_estimate": "Brief cost range based on effort",
           "key_resources": [
-            "List of critical resources needed (tools, infrastructure, etc.)"
+            "List of critical resources needed"
           ],
           "allocation_strategy": "Strategy for allocating resources across project phases"
         },
@@ -78,10 +78,10 @@ export async function getGeminiRecommendationsApi(
           "estimated_duration": "Total project duration estimate",
           "major_milestones": [
             {
-              "phase": "Phase name (e.g., 'Design Phase', 'Development Sprint 1')",
+              "phase": "Phase name",
               "duration": "Expected duration",
               "deliverables": [
-                "Specific deliverables for this phase"
+                "Key deliverables"
               ]
             }
           ]
@@ -89,13 +89,13 @@ export async function getGeminiRecommendationsApi(
         "risk_management": {
           "high_priority_risks": [
             {
-              "risk": "Specific risk description",
-              "impact": "Potential impact on project",
-              "mitigation": "Concrete mitigation strategy"
+              "risk": "Brief risk description",
+              "impact": "Impact level",
+              "mitigation": "Key mitigation action"
             }
           ],
           "contingency_plans": [
-            "List of backup plans for major risks"
+            "Main backup plan"
           ]
         },
         "feature_explanations": [
@@ -105,17 +105,16 @@ export async function getGeminiRecommendationsApi(
             "explanation": "Detailed explanation of why this feature is important and how it impacts the effort estimation, including specific recommendations for handling this aspect of the project"
           }
         ],
-        "summary": "A concise executive summary of the overall project approach and key considerations"
+        "summary": "Brief executive summary"
       }
 
       Important guidelines:
-      1. Team recommendations should be specific to project size and complexity
-      2. Resource planning should be realistic and based on effort score
-      3. Timeline should include concrete milestones and deliverables
-      4. Risk management should focus on practical mitigation strategies
+      1. Keep all responses concise and focused
+      2. Limit risk items to top 2-3 critical risks
+      3. Provide brief, actionable recommendations
+      4. Focus on essential information only
       5. Feature explanations should be detailed and actionable, explaining why each feature matters
-      
-      Make all recommendations specific, measurable, and immediately actionable.
+      Make all recommendations specific and actionable.
     `;
 
     const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {

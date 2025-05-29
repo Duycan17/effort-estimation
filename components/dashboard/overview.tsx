@@ -42,7 +42,8 @@ export function DashboardOverview({ onViewChange }: DashboardOverviewProps) {
   }, [])
 
   const fetchDashboardData = async () => {
-    const { data, error } = await supabase.from("projects").select("*").order("created_at", { ascending: false })
+    const { data: user } = await supabase.auth.getUser();
+    const { data, error } = await supabase.from("projects").select("*").eq("user_id", user.user?.id).order("created_at", { ascending: false })
 
     if (error) {
       console.error("Error fetching projects:", error)

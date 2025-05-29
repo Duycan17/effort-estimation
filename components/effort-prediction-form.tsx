@@ -95,7 +95,9 @@ export function EffortPredictionForm({ user }: EffortPredictionFormProps) {
       description,
       dataset: selectedDataset,
       input_values: currentFormValues,
-      predicted_effort: result.explanation?.prediction || result.prediction,
+      predicted_effort: Math.abs(
+        result.explanation?.prediction || Math.abs(result.prediction || 0)
+      ),
     });
 
     if (error) {
