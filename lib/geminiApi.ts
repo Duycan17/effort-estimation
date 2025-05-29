@@ -32,6 +32,11 @@ interface GeminiResponse {
     }[];
     contingency_plans: string[];
   };
+  feature_explanations: {
+    feature: string;
+    importance: number;
+    explanation: string;
+  }[];
   summary: string;
 }
 
@@ -53,7 +58,7 @@ export async function getGeminiRecommendationsApi(
         .map((f) => `  * ${f.feature}: ${f.importance}`)
         .join("\n")}
 
-      Please provide a comprehensive project management plan in the following JSON format:
+      Please provide a comprehensive project management plan and feature analysis in the following JSON format:
       {
         "team_recommendations": {
           "team_size": "Specific number of team members needed",
@@ -93,6 +98,13 @@ export async function getGeminiRecommendationsApi(
             "List of backup plans for major risks"
           ]
         },
+        "feature_explanations": [
+          {
+            "feature": "Name of the feature",
+            "importance": "Numerical importance score",
+            "explanation": "Detailed explanation of why this feature is important and how it impacts the effort estimation, including specific recommendations for handling this aspect of the project"
+          }
+        ],
         "summary": "A concise executive summary of the overall project approach and key considerations"
       }
 
@@ -101,6 +113,7 @@ export async function getGeminiRecommendationsApi(
       2. Resource planning should be realistic and based on effort score
       3. Timeline should include concrete milestones and deliverables
       4. Risk management should focus on practical mitigation strategies
+      5. Feature explanations should be detailed and actionable, explaining why each feature matters
       
       Make all recommendations specific, measurable, and immediately actionable.
     `;
@@ -166,6 +179,7 @@ export async function getGeminiRecommendationsApi(
           contingency_plans:
             parsedResponse.risk_management?.contingency_plans || [],
         },
+        feature_explanations: parsedResponse.feature_explanations || [],
         summary: parsedResponse.summary || "Summary not available",
       };
     } catch (parseError) {
@@ -198,6 +212,7 @@ function getDefaultResponse(): GeminiResponse {
       high_priority_risks: [],
       contingency_plans: [],
     },
+    feature_explanations: [],
     summary: "Failed to generate project analysis",
   };
 }

@@ -18,6 +18,9 @@ import {
   predictAlbrecht,
   predictCocomo,
   explainChina,
+  explainDesharnais,
+  explainAlbrecht,
+  explainCocomo,
   type Dataset,
 } from "@/lib/prediction";
 import type { User } from "@supabase/supabase-js";
@@ -60,13 +63,13 @@ export function EffortPredictionForm({ user }: EffortPredictionFormProps) {
           response = await explainChina(values);
           break;
         case "desharnais":
-          response = await predictDesharnais(values);
+          response = await explainDesharnais(values);
           break;
         case "albrecht":
-          response = await predictAlbrecht(values);
+          response = await explainAlbrecht(values);
           break;
         case "cocomo":
-          response = await predictCocomo(values);
+          response = await explainCocomo(values);
           break;
       }
 
