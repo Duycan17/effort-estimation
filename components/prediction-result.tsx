@@ -15,16 +15,6 @@ import {
 import { getGeminiRecommendationsApi } from "@/lib/geminiApi";
 import { FeatureImportance } from "@/types/prediction";
 
-interface PredictionResultProps {
-  result: {
-    explanation: {
-      prediction: number;
-      feature_importance: FeatureImportance[];
-    };
-    success: boolean;
-  } | null;
-}
-
 interface GeminiResponse {
   team_recommendations: {
     team_size: string;
@@ -55,7 +45,20 @@ interface GeminiResponse {
   summary: string;
 }
 
+interface PredictionResultProps {
+  result: {
+    explanation?: {
+      prediction: number;
+      feature_importance: FeatureImportance[];
+    };
+    prediction?: number;
+    success: boolean;
+  };
+}
+
 export function PredictionResult({ result }: PredictionResultProps) {
+  const prediction = result.explanation?.prediction || result.prediction;
+  const featureImportance = result.explanation?.feature_importance;
   const [geminiResponse, setGeminiResponse] = useState<GeminiResponse | null>(
     null
   );
@@ -63,13 +66,15 @@ export function PredictionResult({ result }: PredictionResultProps) {
 
   useEffect(() => {
     async function fetchGeminiRecommendations() {
-      if (!result?.explanation) return;
+      const predictionValue =
+        result.explanation?.prediction || result.prediction;
+      if (!predictionValue) return;
 
       setIsLoadingGemini(true);
       try {
         const response = await getGeminiRecommendationsApi({
-          prediction: result.explanation.prediction,
-          feature_importance: result.explanation.feature_importance,
+          prediction: predictionValue,
+          feature_importance: result.explanation?.feature_importance || [],
         });
         setGeminiResponse(response);
       } catch (error) {
@@ -82,19 +87,8 @@ export function PredictionResult({ result }: PredictionResultProps) {
     fetchGeminiRecommendations();
   }, [result]);
 
-  if (!result || !result.explanation) {
-    return (
-      <Card className="overflow-hidden">
-        <CardHeader className="bg-slate-50 pb-2">
-          <CardTitle className="text-xl">Project Analysis</CardTitle>
-        </CardHeader>
-        <CardContent className="p-6">
-          <div className="text-center text-slate-500">
-            No prediction results available
-          </div>
-        </CardContent>
-      </Card>
-    );
+  if (!prediction) {
+    return null;
   }
 
   const getEffortCategory = (value: number) => {
@@ -107,7 +101,7 @@ export function PredictionResult({ result }: PredictionResultProps) {
     return { name: "Very High", color: "bg-red-100 text-red-800" };
   };
 
-  const category = getEffortCategory(result.explanation.prediction);
+  const category = getEffortCategory(prediction);
 
   return (
     <Card className="overflow-hidden">
@@ -116,48 +110,36 @@ export function PredictionResult({ result }: PredictionResultProps) {
       </CardHeader>
       <CardContent className="p-6">
         {/* Prediction Result Display */}
-        <div className="mb-8 space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-medium flex items-center gap-2">
-                <Target className="w-5 h-5" />
-                Effort Estimation
-              </h3>
-              <p className="text-sm text-slate-600">
-                Predicted effort in person-days
-              </p>
-            </div>
-            <div className="text-right">
-              <div className="text-2xl font-bold">
-                {result.explanation.prediction.toFixed(1)}
-              </div>
-              <span
-                className={`text-sm px-2 py-1 rounded-full ${category.color}`}>
-                {category.name} Effort
-              </span>
-            </div>
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold">Predicted Effort</h3>
+            <p className="text-4xl font-bold text-primary">
+              {prediction.toFixed(2)}
+            </p>
           </div>
 
-          <div>
-            <h4 className="text-sm font-medium mb-2">Feature Importance</h4>
-            <div className="space-y-2">
-              {result.explanation.feature_importance.map((feature, index) => (
-                <div key={index} className="space-y-1">
-                  <div className="flex justify-between text-sm">
+          {featureImportance && (
+            <div>
+              <h4 className="text-lg font-semibold mb-2">Feature Importance</h4>
+              <div className="space-y-2">
+                {featureImportance.map((feature) => (
+                  <div
+                    key={feature.feature}
+                    className="flex items-center justify-between">
                     <span>{feature.feature}</span>
-                    <span className="font-medium">
-                      {(feature.importance * 100).toFixed(1)}%
+                    <span className="font-mono">
+                      {(feature.importance * 100).toFixed(2)}%
                     </span>
                   </div>
-                  <Progress value={feature.importance * 100} className="h-2" />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {isLoadingGemini ? (
           <div className="flex items-center justify-center py-12">
+            <p className="text-slate-500">Loading project analysis...</p>
             <Loader2 className="h-8 w-8 animate-spin text-slate-500" />
           </div>
         ) : geminiResponse ? (

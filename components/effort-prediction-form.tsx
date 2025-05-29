@@ -1,92 +1,76 @@
 "use client";
 
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { AlertCircle, ArrowRight, Save } from "lucide-react";
 import { PredictionResult } from "@/components/prediction-result";
 import { SaveProjectDialog } from "@/components/save-project-dialog";
-import { predictEffort } from "@/lib/prediction";
+import { DatasetSelect } from "@/components/dataset-select";
+import { ChinaForm } from "@/components/forms/china-form";
+import { DesharnaisForm } from "@/components/forms/desharnais-form";
+import { AlbrechtForm } from "@/components/forms/albrecht-form";
+import { CocomoForm } from "@/components/forms/cocomo-form";
+import {
+  predictChina,
+  predictDesharnais,
+  predictAlbrecht,
+  predictCocomo,
+  explainChina,
+  type Dataset,
+} from "@/lib/prediction";
 import type { User } from "@supabase/supabase-js";
-
-// Define the form schema with validation
-const formSchema = z.object({
-  afp: z.coerce.number().nonnegative("AFP must be a positive number"),
-  input: z.coerce.number().nonnegative("Input must be a positive number"),
-  output: z.coerce.number().nonnegative("Output must be a positive number"),
-  enquiry: z.coerce.number().nonnegative("Enquiry must be a positive number"),
-  file: z.coerce.number().nonnegative("File must be a positive number"),
-  interface: z.coerce
-    .number()
-    .nonnegative("Interface must be a positive number"),
-  resource: z.coerce.number().nonnegative("Resource must be a positive number"),
-  duration: z.coerce.number().nonnegative("Duration must be a positive number"),
-});
+import { createClient } from "@/lib/supabase/client";
 
 interface EffortPredictionFormProps {
   user: User;
 }
 
-export type FormValues = z.infer<typeof formSchema>;
-
 export function EffortPredictionForm({ user }: EffortPredictionFormProps) {
+  const [selectedDataset, setSelectedDataset] = useState<Dataset>("china");
   const [result, setResult] = useState<{
-    explanation: {
+    explanation?: {
       prediction: number;
       feature_importance: Array<{
         feature: string;
         importance: number;
       }>;
     };
+    prediction?: number;
     success: boolean;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
-  const [currentFormValues, setCurrentFormValues] = useState<FormValues | null>(
-    null
-  );
+  const [currentFormValues, setCurrentFormValues] = useState<any>(null);
 
   const supabase = createClient();
 
-  // Initialize the form
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      afp: 0,
-      input: 0,
-      output: 0,
-      enquiry: 0,
-      file: 0,
-      interface: 0,
-      resource: 0,
-      duration: 0,
-    },
-  });
-
   // Handle form submission
-  async function onSubmit(values: FormValues) {
+  async function onSubmit(values: any) {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Calculate prediction
-      const predictionResponse = await predictEffort(values);
-      setResult(predictionResponse);
+      let response;
+
+      switch (selectedDataset) {
+        case "china":
+          response = await explainChina(values);
+          break;
+        case "desharnais":
+          response = await predictDesharnais(values);
+          break;
+        case "albrecht":
+          response = await predictAlbrecht(values);
+          break;
+        case "cocomo":
+          response = await predictCocomo(values);
+          break;
+      }
+
+      setResult(response);
       setCurrentFormValues(values);
     } catch (err) {
       setError(
@@ -106,28 +90,20 @@ export function EffortPredictionForm({ user }: EffortPredictionFormProps) {
       user_id: user.id,
       name,
       description,
-      afp: currentFormValues.afp,
-      input: currentFormValues.input,
-      output: currentFormValues.output,
-      enquiry: currentFormValues.enquiry,
-      file: currentFormValues.file,
-      interface: currentFormValues.interface,
-      resource: currentFormValues.resource,
-      duration: currentFormValues.duration,
-      predicted_effort: result.explanation.prediction,
+      dataset: selectedDataset,
+      input_values: currentFormValues,
+      predicted_effort: result.explanation?.prediction || result.prediction,
     });
 
     if (error) {
       setError("Failed to save project. Please try again.");
     } else {
       setShowSaveDialog(false);
-      // You could show a success message here
     }
   };
 
   // Reset the form and results
   function handleReset() {
-    form.reset();
     setResult(null);
     setError(null);
     setCurrentFormValues(null);
@@ -137,185 +113,48 @@ export function EffortPredictionForm({ user }: EffortPredictionFormProps) {
     <div className="space-y-8">
       <Card>
         <CardContent className="pt-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="afp"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-2">
-                        <FormLabel>AFP</FormLabel>
-                        <div className="text-xs text-slate-500">
-                          (Adjusted Function Points)
-                        </div>
-                      </div>
-                      <FormControl>
-                        <Input type="number" placeholder="0" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          <div className="mb-6">
+            <DatasetSelect
+              value={selectedDataset}
+              onValueChange={setSelectedDataset}
+            />
+          </div>
 
-                <FormField
-                  control={form.control}
-                  name="input"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-2">
-                        <FormLabel>Input</FormLabel>
-                        <div className="text-xs text-slate-500">
-                          (Number of input types)
-                        </div>
-                      </div>
-                      <FormControl>
-                        <Input type="number" placeholder="0" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          {selectedDataset === "china" && <ChinaForm onSubmit={onSubmit} />}
+          {selectedDataset === "desharnais" && (
+            <DesharnaisForm onSubmit={onSubmit} />
+          )}
+          {selectedDataset === "albrecht" && (
+            <AlbrechtForm onSubmit={onSubmit} />
+          )}
+          {selectedDataset === "cocomo" && <CocomoForm onSubmit={onSubmit} />}
 
-                <FormField
-                  control={form.control}
-                  name="output"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-2">
-                        <FormLabel>Output</FormLabel>
-                        <div className="text-xs text-slate-500">
-                          (Number of output types)
-                        </div>
-                      </div>
-                      <FormControl>
-                        <Input type="number" placeholder="0" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          {error && (
+            <Alert variant="destructive" className="mt-6">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-                <FormField
-                  control={form.control}
-                  name="enquiry"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-2">
-                        <FormLabel>Enquiry</FormLabel>
-                        <div className="text-xs text-slate-500">
-                          (Number of enquiry types)
-                        </div>
-                      </div>
-                      <FormControl>
-                        <Input type="number" placeholder="0" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="file"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-2">
-                        <FormLabel>File</FormLabel>
-                        <div className="text-xs text-slate-500">
-                          (Number of logical files)
-                        </div>
-                      </div>
-                      <FormControl>
-                        <Input type="number" placeholder="0" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="interface"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-2">
-                        <FormLabel>Interface</FormLabel>
-                        <div className="text-xs text-slate-500">
-                          (Number of external interfaces)
-                        </div>
-                      </div>
-                      <FormControl>
-                        <Input type="number" placeholder="0" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="resource"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-2">
-                        <FormLabel>Resource</FormLabel>
-                        <div className="text-xs text-slate-500">
-                          (Number of resources allocated)
-                        </div>
-                      </div>
-                      <FormControl>
-                        <Input type="number" placeholder="0" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="duration"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-2">
-                        <FormLabel>Duration</FormLabel>
-                        <div className="text-xs text-slate-500">
-                          (Expected duration in months)
-                        </div>
-                      </div>
-                      <FormControl>
-                        <Input type="number" placeholder="0" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="text-center text-sm text-slate-500">
-                All fields are required and must be non-negative numbers
-              </div>
-
-              {error && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-
-              <div className="flex justify-end space-x-4">
-                <Button type="button" variant="outline" onClick={handleReset}>
-                  Reset
-                </Button>
-                <Button type="submit" disabled={isLoading} className="gap-2">
-                  {isLoading ? "Calculating..." : "Predict Effort"}
-                  {!isLoading && <ArrowRight className="h-4 w-4" />}
-                </Button>
-              </div>
-            </form>
-          </Form>
+          <div className="flex justify-end space-x-4 mt-6">
+            <Button type="button" variant="outline" onClick={handleReset}>
+              Reset
+            </Button>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="gap-2"
+              onClick={() => {
+                const form = document.querySelector("form");
+                if (form) {
+                  form.requestSubmit();
+                }
+              }}>
+              {isLoading ? "Calculating..." : "Predict Effort"}
+              {!isLoading && <ArrowRight className="h-4 w-4" />}
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -334,7 +173,9 @@ export function EffortPredictionForm({ user }: EffortPredictionFormProps) {
       {showSaveDialog && currentFormValues && result !== null && (
         <SaveProjectDialog
           formValues={currentFormValues}
-          predictedEffort={result.explanation.prediction}
+          predictedEffort={
+            result.explanation?.prediction || result.prediction || 0
+          }
           onSave={handleSaveProject}
           onClose={() => setShowSaveDialog(false)}
         />
