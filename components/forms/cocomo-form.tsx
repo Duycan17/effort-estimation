@@ -12,17 +12,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const formSchema = z.object({
-  acap: z.coerce.number().min(0.1).max(1.5, "ACAP must be between 0.1 and 1.5"),
-  aexp: z.coerce.number().min(0.1).max(1.5, "AEXP must be between 0.1 and 1.5"),
-  pcap: z.coerce.number().min(0.1).max(1.5, "PCAP must be between 0.1 and 1.5"),
-  vexp: z.coerce.number().min(0.1).max(1.5, "VEXP must be between 0.1 and 1.5"),
-  lexp: z.coerce.number().min(0.1).max(1.5, "LEXP must be between 0.1 and 1.5"),
-  modp: z.coerce.number().min(0.1).max(1.5, "MODP must be between 0.1 and 1.5"),
-  tool: z.coerce.number().min(0.1).max(1.5, "TOOL must be between 0.1 and 1.5"),
-  sced: z.coerce.number().min(0.1).max(1.5, "SCED must be between 0.1 and 1.5"),
-  loc: z.coerce.number().nonnegative("LOC must be a positive number"),
-});
+// const formSchema = z.object({
+//   acap: z.coerce.number().min(0.1).max(1.5, "ACAP must be between 0.1 and 1.5"),
+//   aexp: z.coerce.number().min(0.1).max(1.5, "AEXP must be between 0.1 and 1.5"),
+//   pcap: z.coerce.number().min(0.1).max(1.5, "PCAP must be between 0.1 and 1.5"),
+//   vexp: z.coerce.number().min(0.1).max(1.5, "VEXP must be between 0.1 and 1.5"),
+//   lexp: z.coerce.number().min(0.1).max(1.5, "LEXP must be between 0.1 and 1.5"),
+//   modp: z.coerce.number().min(0.1).max(1.5, "MODP must be between 0.1 and 1.5"),
+//   tool: z.coerce.number().min(0.1).max(1.5, "TOOL must be between 0.1 and 1.5"),
+//   sced: z.coerce.number().min(0.1).max(1.5, "SCED must be between 0.1 and 1.5"),
+//   loc: z.coerce.number().nonnegative("LOC must be a positive number"),
+// });
 
 interface CocomoFormProps {
   onSubmit: (values: CocomoFormValues) => void;
@@ -30,16 +30,16 @@ interface CocomoFormProps {
 
 export function CocomoForm({ onSubmit }: CocomoFormProps) {
   const form = useForm<CocomoFormValues>({
-    resolver: zodResolver(formSchema),
+    // resolver: zodResolver(formSchema),
     defaultValues: {
-      acap: 1.0,
-      aexp: 1.0,
-      pcap: 1.0,
-      vexp: 1.0,
-      lexp: 1.0,
-      modp: 1.0,
-      tool: 1.0,
-      sced: 1.0,
+      acap: 1,
+      aexp: 1,
+      pcap: 1,
+      vexp: 1,
+      lexp: 1,
+      modp: 1,
+      tool: 1,
+      sced: 1,
       loc: 0,
     },
   });
@@ -62,8 +62,8 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <FormControl>
                   <Input
                     type="number"
-                    step="0.1"
-                    placeholder="1.0"
+                    step="1"
+                    placeholder="1"
                     {...field}
                   />
                 </FormControl>
@@ -86,8 +86,8 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <FormControl>
                   <Input
                     type="number"
-                    step="0.1"
-                    placeholder="1.0"
+                    step="1"
+                    placeholder="1"
                     {...field}
                   />
                 </FormControl>
@@ -110,8 +110,8 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <FormControl>
                   <Input
                     type="number"
-                    step="0.1"
-                    placeholder="1.0"
+                    step="1"
+                    placeholder="1"
                     {...field}
                   />
                 </FormControl>
@@ -134,8 +134,8 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <FormControl>
                   <Input
                     type="number"
-                    step="0.1"
-                    placeholder="1.0"
+                    step="1"
+                    placeholder="1"
                     {...field}
                   />
                 </FormControl>
@@ -158,8 +158,8 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <FormControl>
                   <Input
                     type="number"
-                    step="0.1"
-                    placeholder="1.0"
+                    step="1"
+                    placeholder="1"
                     {...field}
                   />
                 </FormControl>
@@ -182,8 +182,8 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <FormControl>
                   <Input
                     type="number"
-                    step="0.1"
-                    placeholder="1.0"
+                    step="1"
+                    placeholder="1"
                     {...field}
                   />
                 </FormControl>
@@ -206,8 +206,8 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <FormControl>
                   <Input
                     type="number"
-                    step="0.1"
-                    placeholder="1.0"
+                    step="1"
+                    placeholder="1"
                     {...field}
                   />
                 </FormControl>
@@ -230,8 +230,8 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <FormControl>
                   <Input
                     type="number"
-                    step="0.1"
-                    placeholder="1.0"
+                    step="1"
+                    placeholder="1"
                     {...field}
                   />
                 </FormControl>

@@ -47,6 +47,33 @@ export async function explainChina(
   );
 }
 
+export async function explainDesharnais(
+  values: DesharnaisFormValues
+): Promise<ExplanationResponse> {
+  return makeApiCall<DesharnaisFormValues, ExplanationResponse>(
+    "/explain/desharnais",
+    values
+  );
+}
+
+export async function explainAlbrecht(
+  values: AlbrechtFormValues
+): Promise<ExplanationResponse> {
+  return makeApiCall<AlbrechtFormValues, ExplanationResponse>(
+    "/explain/albrecht",
+    values
+  );
+}
+
+export async function explainCocomo(
+  values: CocomoFormValues
+): Promise<ExplanationResponse> {
+  return makeApiCall<CocomoFormValues, ExplanationResponse>(
+    "/explain/cocomo",
+    values
+  );
+}
+
 export async function predictDesharnais(
   values: DesharnaisFormValues
 ): Promise<PredictionResponse> {

@@ -42,6 +42,11 @@ interface GeminiResponse {
     }[];
     contingency_plans: string[];
   };
+  feature_explanations: {
+    feature: string;
+    importance: number;
+    explanation: string;
+  }[];
   summary: string;
 }
 
@@ -63,6 +68,8 @@ export function PredictionResult({ result }: PredictionResultProps) {
     null
   );
   const [isLoadingGemini, setIsLoadingGemini] = useState(false);
+
+  console.log(result);
 
   useEffect(() => {
     async function fetchGeminiRecommendations() {
@@ -321,6 +328,40 @@ export function PredictionResult({ result }: PredictionResultProps) {
                   </div>
                 </div>
               </div>
+
+              {/* Feature Importance Analysis */}
+              {geminiResponse.feature_explanations &&
+                geminiResponse.feature_explanations.length > 0 && (
+                  <div className="col-span-1 md:col-span-2 space-y-4">
+                    <h3 className="text-lg font-medium flex items-center gap-2">
+                      <Target className="w-5 h-5" />
+                      Feature Analysis
+                    </h3>
+                    <div className="bg-white p-4 rounded-lg border">
+                      <div className="space-y-4">
+                        {geminiResponse.feature_explanations.map(
+                          (feature, index) => (
+                            <div
+                              key={index}
+                              className="pb-4 border-b last:border-b-0">
+                              <div className="flex items-center justify-between mb-2">
+                                <h4 className="font-medium">
+                                  {feature.feature}
+                                </h4>
+                                <span className="text-sm font-mono bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                                  {(feature.importance * 100).toFixed(2)}%
+                                </span>
+                              </div>
+                              <p className="text-sm text-slate-600">
+                                {feature.explanation}
+                              </p>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
             </div>
           </div>
         ) : (
