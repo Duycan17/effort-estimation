@@ -1,4 +1,4 @@
-import type { FormValues } from "@/components/effort-prediction-form"
+import type { FormValues } from "@/components/effort-prediction-form";
 
 interface PredictionResponse {
   explanation: {
@@ -14,12 +14,14 @@ interface PredictionResponse {
 /**
  * Makes an API call to predict project effort
  */
-export async function predictEffort(values: FormValues): Promise<PredictionResponse> {
+export async function predictEffort(
+  values: FormValues
+): Promise<PredictionResponse> {
   try {
-    const response = await fetch('http://172.29.97.78:5000/explain/china', {
-      method: 'POST',
+    const response = await fetch("http://127.0.0.1:5000/explain/china", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         AFP: values.afp,
@@ -29,8 +31,8 @@ export async function predictEffort(values: FormValues): Promise<PredictionRespo
         File: values.file,
         Interface: values.interface,
         Resource: values.resource,
-        Duration: values.duration
-      })
+        Duration: values.duration,
+      }),
     });
 
     if (!response.ok) {
@@ -38,14 +40,14 @@ export async function predictEffort(values: FormValues): Promise<PredictionRespo
     }
 
     const data: PredictionResponse = await response.json();
-    
+
     if (!data.success) {
-      throw new Error('Prediction request failed');
+      throw new Error("Prediction request failed");
     }
 
     return data;
   } catch (error) {
-    console.error('Error making prediction:', error);
+    console.error("Error making prediction:", error);
     throw error;
   }
 }
