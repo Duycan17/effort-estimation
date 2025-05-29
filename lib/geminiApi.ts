@@ -58,10 +58,10 @@ export async function getGeminiRecommendationsApi(
         .map((f) => `  * ${f.feature}: ${f.importance}`)
         .join("\n")}
 
-      Please provide a comprehensive project management plan and feature analysis in the following JSON format:
+      Please provide a comprehensive project management plan and feature analysis stricly in the following JSON format:
       {
         "team_recommendations": {
-          "team_size": "Specific number of team members needed",
+        "team_size": "Specific number of team members needed",
           "roles_needed": [
             "List of specific roles required (e.g., 'Senior Backend Developer', 'UI/UX Designer')"
           ],

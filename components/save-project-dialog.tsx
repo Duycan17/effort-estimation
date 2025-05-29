@@ -18,11 +18,25 @@ import type { FormValues } from "@/lib/types"
 interface SaveProjectDialogProps {
   formValues: FormValues
   predictedEffort: number
+  dataset: "china" | "desharnais" | "albrecht" | "cocomo"
   onSave: (name: string, description: string) => void
   onClose: () => void
 }
 
-export function SaveProjectDialog({ formValues, predictedEffort, onSave, onClose }: SaveProjectDialogProps) {
+const getEffortUnit = (dataset: string) => {
+  switch (dataset) {
+    case "china":
+    case "desharnais":
+      return "Person-Hours";
+    case "albrecht":
+    case "cocomo":
+      return "Person-Months";
+    default:
+      return "Person-Hours";
+  }
+};
+
+export function SaveProjectDialog({ formValues, predictedEffort, dataset, onSave, onClose }: SaveProjectDialogProps) {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
 
@@ -58,7 +72,7 @@ export function SaveProjectDialog({ formValues, predictedEffort, onSave, onClose
 
           <div className="bg-gray-50 p-3 rounded-lg">
             <p className="text-sm font-medium">Prediction Summary</p>
-            <p className="text-sm text-gray-600">Estimated Effort: {predictedEffort.toFixed(1)} person-days</p>
+            <p className="text-sm text-gray-600">Estimated Effort: {predictedEffort.toFixed(1)} {getEffortUnit(dataset)}</p>
             <p className="text-sm text-gray-600">
               AFP: {formValues.afp}, Duration: {formValues.duration} months
             </p>

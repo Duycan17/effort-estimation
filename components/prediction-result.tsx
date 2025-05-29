@@ -121,7 +121,7 @@ export function PredictionResult({ result }: PredictionResultProps) {
           <div className="text-center">
             <h3 className="text-2xl font-bold">Predicted Effort</h3>
             <p className="text-4xl font-bold text-primary">
-              {prediction.toFixed(2)}
+              {Math.abs(prediction).toFixed(2)}
             </p>
           </div>
 
