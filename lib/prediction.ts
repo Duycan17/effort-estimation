@@ -8,7 +8,7 @@ import {
   type Dataset,
 } from "@/types/prediction";
 
-const BASE_URL = "http://127.0.0.1:5000";
+const BASE_URL = "http://172.29.97.78:5000";
 
 async function makeApiCall<T, R>(endpoint: string, data: T): Promise<R> {
   try {

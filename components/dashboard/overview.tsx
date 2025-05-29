@@ -144,7 +144,6 @@ export function DashboardOverview({ onViewChange }: DashboardOverviewProps) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.avgEffort.toFixed(1)}</div>
-            <p className="text-xs text-muted-foreground">person-days</p>
           </CardContent>
         </Card>
 
