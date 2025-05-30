@@ -177,6 +177,7 @@ export function EffortPredictionForm({ user }: EffortPredictionFormProps) {
 
       {showSaveDialog && currentFormValues && result !== null && (
         <SaveProjectDialog
+          dataset={selectedDataset}
           formValues={currentFormValues}
           predictedEffort={
             result.explanation?.prediction || result.prediction || 0
