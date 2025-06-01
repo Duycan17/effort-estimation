@@ -3,6 +3,7 @@ import { FeatureImportance } from "@/types/prediction";
 interface GeminiRequest {
   prediction: number;
   feature_importance: FeatureImportance[];
+  personMonths: boolean;
 }
 
 interface GeminiResponse {
@@ -52,7 +53,7 @@ export async function getGeminiRecommendationsApi(
       As a senior project management consultant, analyze this project's effort prediction and provide detailed, actionable recommendations.
       
       Project Metrics:
-      - Person hours: ${Math.abs(data.prediction)}
+      - Person ${data.personMonths ? "months" : "hours"}: ${Math.abs(data.prediction)}
       - Feature Importance Breakdown:
       ${data.feature_importance
         .map((f) => `  * ${f.feature}: ${f.importance}`)

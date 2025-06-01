@@ -59,6 +59,7 @@ interface PredictionResultProps {
     };
     prediction?: number;
     success: boolean;
+    personMonths: boolean;
   };
 }
 
@@ -83,6 +84,7 @@ export function PredictionResult({ result }: PredictionResultProps) {
         const response = await getGeminiRecommendationsApi({
           prediction: predictionValue,
           feature_importance: result.explanation?.feature_importance || [],
+          personMonths: result.personMonths,
         });
         setGeminiResponse(response);
       } catch (error) {
@@ -123,6 +125,9 @@ export function PredictionResult({ result }: PredictionResultProps) {
             <h3 className="text-2xl font-bold">Predicted Effort</h3>
             <p className="text-4xl font-bold text-primary">
               {Math.abs(prediction).toFixed(2)}
+            </p>
+            <p className="text-sm text-slate-500">
+              {result.personMonths ? "Person Months" : "Person Hours"}
             </p>
             <div className="mt-2 flex justify-center">
               <Badge

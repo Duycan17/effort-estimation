@@ -47,11 +47,13 @@ const getDatasetLabel = (dataset: string) => {
 const getEffortUnit = (dataset: string) => {
   switch (dataset) {
     case "china":
+      return "Person-Hours";
     case "desharnais":
       return "Person-Hours";
     case "albrecht":
-    case "cocomo":
       return "Person-Months";
+    case "cocomo":
+      return "Person-Hours";
     default:
       return "Person-Hours";
   }
@@ -91,7 +93,8 @@ export function ProjectCard({ project, onFeedbackClick }: ProjectCardProps) {
           <div className="flex justify-between items-center py-1 px-2 bg-gray-50 rounded">
             <span className="text-sm text-gray-600">Predicted</span>
             <span className="text-sm font-bold">
-              {project.predicted_effort.toFixed(1)} {getEffortUnit(project.dataset)}
+              {project.predicted_effort.toFixed(1)}{" "}
+              {getEffortUnit(project.dataset)}
             </span>
           </div>
           <div className="flex justify-between items-center py-1 px-2 bg-gray-50 rounded">
@@ -101,7 +104,9 @@ export function ProjectCard({ project, onFeedbackClick }: ProjectCardProps) {
                 project.actual_effort ? "font-bold" : "text-gray-500 italic"
               }`}>
               {project.actual_effort
-                ? `${project.actual_effort.toFixed(1)} ${getEffortUnit(project.dataset)}`
+                ? `${project.actual_effort.toFixed(1)} ${getEffortUnit(
+                    project.dataset
+                  )}`
                 : "Not yet evaluated"}
             </span>
           </div>

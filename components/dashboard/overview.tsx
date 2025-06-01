@@ -271,7 +271,9 @@ export function DashboardOverview({ onViewChange }: DashboardOverviewProps) {
                     <div className="flex items-center gap-4">
                       <div className="text-right">
                         <p className="font-semibold">{project.predicted_effort.toFixed(1)}</p>
-                        <p className="text-xs text-gray-500">person-days</p>
+                        <p className="text-xs text-gray-500">
+                          {project.dataset === "albrecht" ? "person-months" : "person-hours"}
+                        </p>
                       </div>
                       <Badge className={category.color}>{category.name}</Badge>
                       {project.feedback_rating && (
