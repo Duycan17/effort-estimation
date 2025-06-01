@@ -13,10 +13,6 @@ import { DesharnaisForm } from "@/components/forms/desharnais-form";
 import { AlbrechtForm } from "@/components/forms/albrecht-form";
 import { CocomoForm } from "@/components/forms/cocomo-form";
 import {
-  predictChina,
-  predictDesharnais,
-  predictAlbrecht,
-  predictCocomo,
   explainChina,
   explainDesharnais,
   explainAlbrecht,
@@ -25,6 +21,7 @@ import {
 } from "@/lib/prediction";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 interface EffortPredictionFormProps {
   user: User;
@@ -95,12 +92,15 @@ export function EffortPredictionForm({ user }: EffortPredictionFormProps) {
       description,
       dataset: selectedDataset,
       input_values: currentFormValues,
-      predicted_effort: result.explanation?.prediction || result.prediction,
+      predicted_effort: Math.abs(
+        result.explanation?.prediction || Math.abs(result.prediction || 0)
+      ),
     });
 
     if (error) {
       setError("Failed to save project. Please try again.");
     } else {
+      toast.success("Project saved successfully.");
       setShowSaveDialog(false);
     }
   };
@@ -163,7 +163,13 @@ export function EffortPredictionForm({ user }: EffortPredictionFormProps) {
 
       {result !== null && (
         <div className="space-y-4">
-          <PredictionResult result={result} />
+          <PredictionResult
+            result={{
+              ...(result || {}),
+              success: result?.success || false,
+              personMonths: selectedDataset === "albrecht" ? true : false,
+            }}
+          />
           <div className="flex justify-center">
             <Button onClick={() => setShowSaveDialog(true)} className="gap-2">
               <Save className="h-4 w-4" />
@@ -175,6 +181,7 @@ export function EffortPredictionForm({ user }: EffortPredictionFormProps) {
 
       {showSaveDialog && currentFormValues && result !== null && (
         <SaveProjectDialog
+          dataset={selectedDataset}
           formValues={currentFormValues}
           predictedEffort={
             result.explanation?.prediction || result.prediction || 0

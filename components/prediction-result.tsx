@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { getGeminiRecommendationsApi } from "@/lib/geminiApi";
 import { FeatureImportance } from "@/types/prediction";
+import { Badge } from "./ui/badge";
 
 interface GeminiResponse {
   team_recommendations: {
@@ -58,6 +59,7 @@ interface PredictionResultProps {
     };
     prediction?: number;
     success: boolean;
+    personMonths: boolean;
   };
 }
 
@@ -82,6 +84,7 @@ export function PredictionResult({ result }: PredictionResultProps) {
         const response = await getGeminiRecommendationsApi({
           prediction: predictionValue,
           feature_importance: result.explanation?.feature_importance || [],
+          personMonths: result.personMonths,
         });
         setGeminiResponse(response);
       } catch (error) {
@@ -123,6 +126,16 @@ export function PredictionResult({ result }: PredictionResultProps) {
             <p className="text-4xl font-bold text-primary">
               {Math.abs(prediction).toFixed(2)}
             </p>
+            <p className="text-sm text-slate-500">
+              {result.personMonths ? "Person Months" : "Person Hours"}
+            </p>
+            <div className="mt-2 flex justify-center">
+              <Badge
+                variant="outline"
+                className={`text-sm px-3 py-1 ${category.color}`}>
+                {category.name}
+              </Badge>
+            </div>
           </div>
 
           {featureImportance && (

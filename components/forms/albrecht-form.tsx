@@ -88,7 +88,7 @@ export function AlbrechtForm({ onSubmit }: AlbrechtFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>Inquiry</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Number of inquiry types)
+                    (Number of inquiry types - User queries)
                   </div>
                 </div>
                 <FormControl>
@@ -126,7 +126,7 @@ export function AlbrechtForm({ onSubmit }: AlbrechtFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>Adjusted Function Points</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Adjusted function points)
+                    (Adjusted function points - Complexity-weighted size)
                   </div>
                 </div>
                 <FormControl>

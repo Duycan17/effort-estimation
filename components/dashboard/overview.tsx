@@ -42,7 +42,8 @@ export function DashboardOverview({ onViewChange }: DashboardOverviewProps) {
   }, [])
 
   const fetchDashboardData = async () => {
-    const { data, error } = await supabase.from("projects").select("*").order("created_at", { ascending: false })
+    const { data: user } = await supabase.auth.getUser();
+    const { data, error } = await supabase.from("projects").select("*").eq("user_id", user.user?.id).order("created_at", { ascending: false })
 
     if (error) {
       console.error("Error fetching projects:", error)
@@ -270,7 +271,9 @@ export function DashboardOverview({ onViewChange }: DashboardOverviewProps) {
                     <div className="flex items-center gap-4">
                       <div className="text-right">
                         <p className="font-semibold">{project.predicted_effort.toFixed(1)}</p>
-                        <p className="text-xs text-gray-500">person-days</p>
+                        <p className="text-xs text-gray-500">
+                          {project.dataset === "albrecht" ? "person-months" : "person-hours"}
+                        </p>
                       </div>
                       <Badge className={category.color}>{category.name}</Badge>
                       {project.feedback_rating && (

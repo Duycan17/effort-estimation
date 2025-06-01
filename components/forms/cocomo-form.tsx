@@ -56,16 +56,11 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>ACAP</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Analyst Capability)
+                    (Analyst Capability- Analysis skills)
                   </div>
                 </div>
                 <FormControl>
-                  <Input
-                    type="number"
-                    step="1"
-                    placeholder="1"
-                    {...field}
-                  />
+                  <Input type="number" step="1" placeholder="1" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -80,16 +75,11 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>AEXP</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Applications Experience)
+                    (Relevant Applications Experience)
                   </div>
                 </div>
                 <FormControl>
-                  <Input
-                    type="number"
-                    step="1"
-                    placeholder="1"
-                    {...field}
-                  />
+                  <Input type="number" step="1" placeholder="1" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -104,16 +94,11 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>PCAP</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Programmer Capability)
+                    (Programmer Capability - Development skills)
                   </div>
                 </div>
                 <FormControl>
-                  <Input
-                    type="number"
-                    step="1"
-                    placeholder="1"
-                    {...field}
-                  />
+                  <Input type="number" step="1" placeholder="1" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -128,16 +113,11 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>VEXP</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Virtual Machine Experience)
+                    (Virtual Machine Experience - Platform knowledge)
                   </div>
                 </div>
                 <FormControl>
-                  <Input
-                    type="number"
-                    step="1"
-                    placeholder="1"
-                    {...field}
-                  />
+                  <Input type="number" step="1" placeholder="1" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -152,16 +132,11 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>LEXP</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Language Experience)
+                    (Language Experience - Tech stack proficiency)
                   </div>
                 </div>
                 <FormControl>
-                  <Input
-                    type="number"
-                    step="1"
-                    placeholder="1"
-                    {...field}
-                  />
+                  <Input type="number" step="1" placeholder="1" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -176,16 +151,11 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>MODP</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Modern Programming Practices)
+                    (Modern Programming Practices - Development methodology)
                   </div>
                 </div>
                 <FormControl>
-                  <Input
-                    type="number"
-                    step="1"
-                    placeholder="1"
-                    {...field}
-                  />
+                  <Input type="number" step="1" placeholder="1" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -200,16 +170,11 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>TOOL</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Use of Software Tools)
+                    (Use of Software Tools - Development tools)
                   </div>
                 </div>
                 <FormControl>
-                  <Input
-                    type="number"
-                    step="1"
-                    placeholder="1"
-                    {...field}
-                  />
+                  <Input type="number" step="1" placeholder="1" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -224,16 +189,11 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>SCED</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Required Development Schedule)
+                    (Required Development Schedule - Timeline constraints)
                   </div>
                 </div>
                 <FormControl>
-                  <Input
-                    type="number"
-                    step="1"
-                    placeholder="1"
-                    {...field}
-                  />
+                  <Input type="number" step="1" placeholder="1" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -247,7 +207,9 @@ export function CocomoForm({ onSubmit }: CocomoFormProps) {
               <FormItem>
                 <div className="flex items-center gap-2">
                   <FormLabel>LOC</FormLabel>
-                  <div className="text-xs text-slate-500">(Lines of Code)</div>
+                  <div className="text-xs text-slate-500">
+                    (Lines of Code - Project size metric)
+                  </div>
                 </div>
                 <FormControl>
                   <Input type="number" placeholder="0" {...field} />

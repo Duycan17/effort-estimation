@@ -8,7 +8,6 @@ import { ArrowLeft } from "lucide-react";
 import type { Project } from "@/lib/types";
 import { FeedbackDialog } from "./feedback-dialog";
 import { ProjectCard } from "./project-card";
-
 interface ProjectHistoryProps {
   onBack: () => void;
 }
@@ -26,9 +25,12 @@ export function ProjectHistory({ onBack }: ProjectHistoryProps) {
   }, []);
 
   const fetchProjects = async () => {
+    const { data: user } = await supabase.auth.getUser();
+
     const { data, error } = await supabase
       .from("projects")
       .select("*")
+      .eq("user_id", user.user?.id)
       .order("created_at", { ascending: false });
 
     if (error) {

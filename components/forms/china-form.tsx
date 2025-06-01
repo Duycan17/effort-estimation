@@ -113,7 +113,7 @@ export function ChinaForm({ onSubmit }: ChinaFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>Enquiry</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Number of enquiry types)
+                    (Number of enquiry types - Search/lookup functions)
                   </div>
                 </div>
                 <FormControl>
@@ -132,7 +132,7 @@ export function ChinaForm({ onSubmit }: ChinaFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>File</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Number of logical files)
+                    (Number of logical files - Data groups)
                   </div>
                 </div>
                 <FormControl>
@@ -151,7 +151,7 @@ export function ChinaForm({ onSubmit }: ChinaFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>Interface</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Number of external interfaces)
+                    (Number of external interfaces - System integrations)
                   </div>
                 </div>
                 <FormControl>
@@ -170,7 +170,7 @@ export function ChinaForm({ onSubmit }: ChinaFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>Resource</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Number of resources allocated)
+                    (Number of resources allocated - Team size)
                   </div>
                 </div>
                 <FormControl>
@@ -189,7 +189,7 @@ export function ChinaForm({ onSubmit }: ChinaFormProps) {
                 <div className="flex items-center gap-2">
                   <FormLabel>Duration</FormLabel>
                   <div className="text-xs text-slate-500">
-                    (Expected duration in months)
+                    (Expected duration in months - Project timeline)
                   </div>
                 </div>
                 <FormControl>
